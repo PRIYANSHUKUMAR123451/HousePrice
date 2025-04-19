@@ -1,0 +1,32 @@
+% House Price Prediction using Linear Regression
+
+% Load the data
+data = readtable('data/house_data.csv');
+
+% Extract features (Size and Rooms) and target (Price)
+X = [data.Size_sqt, data.Rooms];  % Feature matrix
+y = data.Price_;                  % Target variable
+
+% Split data into training (80%) and testing (20%) sets
+trainSize = round(0.8 * height(data));
+X_train = X(1:trainSize, :);
+y_train = y(1:trainSize);
+X_test = X(trainSize+1:end, :);
+y_test = y(trainSize+1:end);
+
+% Train a linear regression model
+mdl = fitlm(X_train, y_train);
+
+% Make predictions
+y_pred = predict(mdl, X_test);
+
+% Calculate Mean Absolute Error (MAE)
+mae = mean(abs(y_pred - y_test));
+disp(['Mean Absolute Error (MAE): ', num2str(mae)]);
+
+% Plot results
+figure;
+scatter(y_test, y_pred);
+xlabel('Actual Price');
+ylabel('Predicted Price');
+title('Actual vs Predicted House Prices');
